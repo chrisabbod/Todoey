@@ -8,7 +8,8 @@
 
 import Foundation
 
-class Item {
+//Keyword Codable specifies that this class conforms with both Encodable and Decodable protocols
+class Item: Codable {
     var title : String = ""
     var done : Bool = false
     
