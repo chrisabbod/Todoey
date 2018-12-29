@@ -11,6 +11,7 @@ import RealmSwift
 
 class Category: Object {
     @objc dynamic var name : String = ""
+    @objc dynamic var color : String = ""
     
     //Realm syntax to define a to-many forward relationship
     //This means each category can have a number of Item objects

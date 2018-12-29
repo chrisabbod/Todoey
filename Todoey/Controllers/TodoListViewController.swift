@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     var todoItems : Results<Item>?
     let realm = try! Realm()
@@ -26,6 +27,7 @@ class TodoListViewController: UITableViewController {
         super.viewDidLoad() 
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
+        tableView.separatorStyle = .none
     }
     
     //Mark - TableView Data Source Methods
@@ -37,11 +39,18 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         //Optional chaining
         if let item = todoItems?[indexPath.row] {
+            
             cell.textLabel?.text = item.title
+            
+            //If UIColor(hexString: selectedCategory!.color)? is not nil then continue with darkening
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count)){
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
             
             cell.accessoryType = item.done ? .checkmark : .none
         } else {
@@ -111,6 +120,18 @@ class TodoListViewController: UITableViewController {
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
         tableView.reloadData()
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = todoItems?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(item)
+                }
+            } catch {
+                
+            }
+        }
     }
 }
 

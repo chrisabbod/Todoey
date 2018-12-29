@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
 
     //Initialize our Realm
     let realm = try! Realm()
@@ -20,6 +21,9 @@ class CategoryViewController: UITableViewController {
         super.viewDidLoad()
 
         loadCategories()
+        
+        tableView.separatorStyle = .none
+        
     }
 
     //MARK: - TableView Datasource Methods
@@ -34,9 +38,12 @@ class CategoryViewController: UITableViewController {
         
         //Create a reusable cell and add it to the table at the end of the indexPath
         //CategoryCell is the identifier given to the prototype cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
+        
+        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "1D9BF6")
         
         return cell
     }
@@ -79,6 +86,20 @@ class CategoryViewController: UITableViewController {
         self.tableView.reloadData()
     }
  
+    //MARK: - Delete Data from Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let categoryForDeletion = self.categories?[indexPath.row] {
+            do{
+                try self.realm.write {
+                    self.realm.delete(categoryForDeletion)
+                }
+            } catch {
+                print("Error deleting category \(error)")
+            }
+        }
+    }
+    
     //MARK: - Add New Categories
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -94,6 +115,7 @@ class CategoryViewController: UITableViewController {
             let newCategory = Category()
             
             newCategory.name = textField.text!
+            newCategory.color = UIColor.randomFlat.hexValue()
             
             self.save(category: newCategory)
         }
