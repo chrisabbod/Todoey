@@ -15,6 +15,8 @@ class TodoListViewController: SwipeTableViewController {
     var todoItems : Results<Item>?
     let realm = try! Realm()
     
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     //Data type optional category because it will be nil until it is set
     var selectedCategory : Category? {
         //Everything in the did set function will happen as soon as this variable is set with a value
@@ -24,13 +26,42 @@ class TodoListViewController: SwipeTableViewController {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad() 
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-
+        super.viewDidLoad()
+        
         tableView.separatorStyle = .none
     }
     
-    //Mark - TableView Data Source Methods
+    override func viewWillAppear(_ animated: Bool) {
+        
+        title = selectedCategory?.name
+        
+        guard let colorHex = selectedCategory?.color else { fatalError() }
+            navigationController?.navigationBar.barTintColor = UIColor(hexString: colorHex)
+    
+        updateNavBar(withHexCode: colorHex)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+       updateNavBar(withHexCode: "1D9BF6")
+    }
+    
+    //MARK: - Nav Bar Setup Methods
+    
+    func updateNavBar(withHexCode colorHexCode : String){
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
+
+        guard let navBarColor = UIColor(hexString: colorHexCode) else {fatalError()}
+        
+        navBar.barTintColor = navBarColor
+        
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        
+        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true)]
+        
+        searchBar.barTintColor = navBarColor
+    }
+    
+    //MARK: - TableView Data Source Methods
     
     //Setup number of items in tableview
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

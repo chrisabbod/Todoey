@@ -81,12 +81,14 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Items" id="xwg-co-OSv">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="QkL-RP-nIN">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="VA6-m5-HZU" id="zVM-bC-1bQ"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="bTD-Nh-u7t" id="chw-rf-dQD"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5pW-wt-4I8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -97,8 +99,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="f8G-lr-CWk" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="trq-vg-dfs">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="trq-vg-dfs">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="titleTextAttributes">
